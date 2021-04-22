@@ -24,24 +24,9 @@ class RAM {
             return 0;
         }
         // Physical memory is now in value
-        //  printf("RAM total: %lld\n", value / 1024 / 1024 / 1024);
          return value;
     }
 
-void read2() {
-    mach_msg_type_number_t count = HOST_VM_INFO_COUNT;
-    vm_statistics_data_t vmstat;
-    if(KERN_SUCCESS != host_statistics(mach_host_self(), HOST_VM_INFO, (host_info_t)&vmstat, &count)){
-    // An error occurred
-        printf("An error occurred");
-    }
-    double total = totalRAMSize();//vmstat.wire_count + vmstat.active_count + vmstat.inactive_count + vmstat.free_count;
-    double wired = vmstat.wire_count; /// total;
-    double active = vmstat.active_count / total;
-    double inactive = vmstat.inactive_count / total;
-    double free = vmstat.free_count;// / total;
-    printf("RAM total: %f, wired: %f, active: %f, inactive: %f,  free: %f\n", total, wired, active, inactive, free);
-}
    
     void read() {
     double totalSize = totalRAMSize();
@@ -56,14 +41,7 @@ void read2() {
         KERN_SUCCESS == host_statistics64(mach_port, HOST_VM_INFO64,
                                         (host_info64_t)&vm_stats, &count))
     {
-        // int64_t free_memory = (int64_t)vm_stats.free_count * (int64_t)page_size;
-
-        // int64_t used_memory = ((int64_t)vm_stats.active_count +
-        //                          (int64_t)vm_stats.inactive_count +
-        //                          (int64_t)vm_stats.wire_count) *  (int64_t)page_size;
-
-        // printf("free memory: %f\nused memory: %f\n", gigabytes(free_memory), gigabytes(used_memory));
-    // alternative
+       
         int64_t active = vm_stats.active_count * page_size;
         int64_t inactive = vm_stats.inactive_count * page_size;
         int64_t wired = vm_stats.wire_count *  page_size;
@@ -73,21 +51,15 @@ void read2() {
         int64_t external = vm_stats.external_page_count * page_size;
 
         int64_t used = active + inactive + speculative + wired + compressed - purgeable - external;
-        //  printf("free memory: %lld\nused memory: %lld\n", free_memory, used);
-        int64_t freeSpace = totalSize - used;//free_memory/1000/1000/1000;
-
-        // printf("wired %f, compressed %f\n", wired, compressed);
-        // printf("used %llu, freeSpace %llu\n", used, freeSpace);
-        // printf("purgeable %lld, external %lld\n", purgeable, external);
-        // printf("totalSize %f, free memory: %lld used memory: %lld\n", totalSize, freeSpace, used);
-        printf("totalSize %f, free memory: %f used memory: %f\n", gigabytes(totalSize), gigabytes(freeSpace), gigabytes(used));
+        int64_t freeSpace = totalSize - used;
+        printf("totalSize %.2f, free memory: %.2f used memory: %.2f\n", gigabytes(totalSize), gigabytes(freeSpace), gigabytes(used));
 
         int64_t  app =  used - wired - compressed;
         int64_t cache = purgeable + external;
         int64_t pressure = 100.0 * (wired + compressed) / totalSize;
 
-        printf("app %f, cache: %f pressure: %llu\n", gigabytes(app), gigabytes(cache), pressure);
-        printf("Wired %f, compressed: %f\n", gigabytes(wired), gigabytes(compressed));
+        printf("app %.2f, cache: %.2f pressure: %llu\n", gigabytes(app), gigabytes(cache), pressure);
+        printf("Wired %.2f, compressed: %.2f\n", gigabytes(wired), gigabytes(compressed));
        
         size_t int_size = sizeof(uint);
         int pressureLevel = 0;
