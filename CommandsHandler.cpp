@@ -6,7 +6,7 @@
 
 #include <iostream>
 #include "CPU.cpp"
-#include "Process/Processes.cpp"
+#include "Processes.cpp"
 #include "RAM.cpp"
 
 using namespace std;
