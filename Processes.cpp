@@ -28,7 +28,8 @@ void getAllProcess()//const char *name)
         if (st == PROC_PIDTBSDINFO_SIZE) {
             // if (strcmp(name, proc.pbi_name) == 0) {
                 /* Process PID */
-                printf("%d [%s] [%s]\n", pids[i], proc.pbi_comm, proc.pbi_name);              
+                printf("%d ppid:%d [%s] [%s]\n", pids[i],proc.pbi_ppid, proc.pbi_comm, proc.pbi_name);              
+               // printf("gid %d rgid:%d svgid:%d\n", proc.pbi_pgid, proc.pbi_rgid, proc.pbi_svgid);              
             // }
         }       
     }

@@ -8,6 +8,8 @@
 #include "CPU.cpp"
 #include "Processes.cpp"
 #include "RAM.cpp"
+// #include "Disk.cpp"
+#include "DiskStats.cpp"
 
 using namespace std;
 
@@ -19,7 +21,7 @@ class CommandsHandler {
 CommandsHandler(){
 
     int x;
-    totalCommands = 4;
+    totalCommands = 7;
     cout << "\n\n************--*--********** \n";
     cout << "Welcome to RMAM" << endl;
     cout << "\n************--*--********** \n";
@@ -48,9 +50,9 @@ void showInstructions() {
     cout << "1 : for CPU Stats\n";
     cout << "2 : Get all processes\n";
     cout << "3 : Kill any process\n";
-    cout << "3 : for GPU Stats\n";
     cout << "4 : for RAM Stats\n";
-    cout << "5 : for Storage Stats\n";
+    cout << "5 : Disk Stats\n";
+    cout << "6 : for GPU Stats\n";
     cout << "0 : to exit enter\n";
     cout << "************--*--********** \n\n";
 }
@@ -83,6 +85,12 @@ void executeCammand(int input) {
     }else if (input == 4) {
         RAM ram;
         ram.read();
+    }
+    else if (input == 5) {
+        DiskStats disk;
+        disk.read3();
+        disk.read2();
+
     }
     else {
         cout << "Not implemented yet \n";
